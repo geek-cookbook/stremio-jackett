@@ -27,8 +27,8 @@ routes.get("/:params/manifest.json", (req, res) => {
 		catalogs: [],
 		resources: ["stream"],
 		types: ["movie", "series"],
-		name: "Jackett|ElfHosted",
-		description: "Stremio Jackett Addon|ElfHosted",
+		name: "Jackett | ElfHosted",
+		description: "Stremio Jackett Addon | ElfHosted",
 		behaviorHints: {
 			configurable: true,
 		},
