@@ -21,14 +21,14 @@ function respond(res, data) {
 
 routes.get("/:params/manifest.json", (req, res) => {
 	const manifest = {
-		id: "community.aymene69.jackett",
-		icon: "https://i.imgur.com/tVjqEJP.png",
+		id: "community.elfhosted.jackett",
+		icon: "https://elfhosted.com/images/logo-with-jackett.png",
 		version: "1.1.3",
 		catalogs: [],
 		resources: ["stream"],
 		types: ["movie", "series"],
-		name: "Jackett",
-		description: "Stremio Jackett Addon",
+		name: "Jackett|ElfHosted",
+		description: "Stremio Jackett Addon|ElfHosted",
 		behaviorHints: {
 			configurable: true,
 		},
