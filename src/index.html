@@ -68,7 +68,7 @@
 											onchange="updateLink()"
 										>
 											<option value="torrent">torrent</option>
-											<option value="realdebrid" selected="selected">realdebrid</option>
+											<option value="realdebrid">realdebrid</option>
 											<option value="alldebrid">alldebrid</option>
 										</select>
 									</div>
@@ -118,7 +118,20 @@
 									</div>
 
 									<div class="form-outline form-white mb-4">
-										<label class="form-label">ElfHotsed Jackett API Key</label>
+										<label class="form-label">ElfHosted Jackett URL (preconfigured)</label>
+										<input
+											required
+											value="http://jacket:9117"
+											disabled="disabled"
+											class="form-control form-control-lg"
+											placeholder="For example 'http(s)://jackett_url:port'"
+											oninput="updateLink()"
+											id="jackettUrl"
+										/>
+									</div>
+
+									<div class="form-outline form-white mb-4">
+										<label class="form-label">ElfHosted Jackett API Key</label>
 										<input
 											required
 											class="form-control form-control-lg"
@@ -136,7 +149,6 @@
 					</div>
 				</div>
 			</div>
-
 		</section>
 		<script>
 			document.getElementById("realDebridApiDiv").style.display = "none";
