@@ -50,7 +50,9 @@ routes.get("/:params/stream/:type/:id", async (req, res) => {
 		const type = req.params.type;
 		const id = req.params.id.replace(".json", "").split(":");
 		const service = paramsJson.streamService;
-		const jackettUrl = paramsJson.jackettUrl;
+		// const jackettUrl = paramsJson.jackettUrl;
+		// hard-code for ElfHosted users
+		const jackettUrl = "http://jackett:9117";
 		const jackettApi = paramsJson.jackettApiKey;
 		const debridApi = paramsJson.debridApiKey;
 		const maxResults = clamp(1, paramsJson.maxResults || 5, 15);
