@@ -1,7 +1,19 @@
 import cors from "cors";
 import express from "express";
 import http from "http";
-import routes from "./routes.js";
+import { updateApp } from "./helpers/updateApp";
+import routes from "./routes";
+import "dotenv/config";
+
+if (process.env.NODE_ENV === "production") {
+	setInterval(async () => {
+		try {
+			await updateApp();
+		} catch (error) {
+			console.error("An error has occurred :", error);
+		}
+	}, 60000);
+}
 
 const app = express();
 const port = process.env.PORT || 3000;
