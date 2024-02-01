@@ -1,6 +1,6 @@
 <html lang="en">
 	<head>
-		<title>Stremio-Jackett</title>
+		<title>Stremio-Jackett | ElfHosted</title>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link href="styles.css" rel="stylesheet" />
@@ -20,7 +20,7 @@
 							<div class="card-body p-5 text-center">
 								<div class="mb-md-5 mt-md-4 pb-5">
 									<img
-										src="https://user-images.githubusercontent.com/27040483/28728094-99f3e3f6-73c7-11e7-8f8d-28912dc6ac0d.png"
+										src="https://elfhosted.com/images/logo.svg"
 										class="img-fluid mb-5"
 										alt="logo"
 										width="100"
@@ -180,9 +180,11 @@
 									</div>
 
 									<div class="form-outline form-white mb-4">
-										<label class="form-label">Jackett URL</label>
+										<label class="form-label">ElfHosted Jackett URL (preconfigured)</label>
 										<input
 											required
+											value="http://jackett:9117"
+											disabled="disabled"
 											class="form-control form-control-lg"
 											placeholder="For example 'http(s)://jackett_url:port'"
 											oninput="updateLink()"
@@ -191,11 +193,11 @@
 									</div>
 
 									<div class="form-outline form-white mb-4">
-										<label class="form-label">Jackett API Key</label>
+										<label class="form-label">ElfHosted Jackett API Key</label>
 										<input
 											required
 											class="form-control form-control-lg"
-											placeholder="Enter your Jackett API key"
+											placeholder="Enter your ElfHosted Jackett API key"
 											oninput="updateLink()"
 											id="jackettApi"
 										/>
