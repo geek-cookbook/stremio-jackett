@@ -1,12 +1,9 @@
 import PQueue from "p-queue";
-import { getAvailabilityAD } from "../../helpers/getAvailabilityAD";
-import { getAvailabilityPM } from "../../helpers/getAvailabilityPM";
-import { getAvailabilityRD } from "../../helpers/getAvailabilityRD";
 import getTorrentInfo from "./getTorrentInfo.js";
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-export async function threadedAvailability(itemList, debridApi, addonType, maxResults, maxThread) {
+export async function threadedTorrent(itemList, maxResults, maxThread) {
 	if (maxThread > 1) {
 		const queue = new PQueue({ concurrency: parseInt(maxThread) }); // Limite le nombre de workers à 5
 		if (itemList.length !== 0) {
@@ -42,17 +39,9 @@ export async function threadedAvailability(itemList, debridApi, addonType, maxRe
 						}
 						if (torrentInfo !== undefined) {
 							const { infoHash, magnetLink } = torrentInfo;
-							let availability;
-							if (addonType === "alldebrid") {
-								availability = await getAvailabilityAD(magnetLink, debridApi);
-							} else if (addonType === "premiumize") {
-								availability = await getAvailabilityPM(magnetLink, debridApi);
-							} else if (addonType === "realdebrid") {
-								availability = await getAvailabilityRD(infoHash, debridApi);
-							}
 							elem.torrentInfo = torrentInfo;
 							elem.magnetLink = magnetLink;
-							return { ...elem, availability }; // Ajoute l'availability à l'élément
+							return { ...elem, infoHash }; // Ajoute l'availability à l'élément
 						}
 						return undefined;
 					});
@@ -98,17 +87,9 @@ export async function threadedAvailability(itemList, debridApi, addonType, maxRe
 					}
 					if (torrentInfo !== undefined) {
 						const { infoHash, magnetLink } = torrentInfo;
-						let availability;
-						if (addonType === "alldebrid") {
-							availability = await getAvailabilityAD(magnetLink, debridApi);
-						} else if (addonType === "premiumize") {
-							availability = await getAvailabilityPM(magnetLink, debridApi);
-						} else if (addonType === "realdebrid") {
-							availability = await getAvailabilityRD(infoHash, debridApi);
-						}
 						elem.torrentInfo = torrentInfo;
 						elem.magnetLink = magnetLink;
-						return { ...elem, availability }; // Ajoute l'availability à l'élément
+						return { ...elem, infoHash }; // Ajoute l'availability à l'élément
 					}
 					return undefined;
 				}),

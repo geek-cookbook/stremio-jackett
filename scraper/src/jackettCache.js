@@ -35,7 +35,6 @@ export async function jackettCache(jackettUrl, jackettApi, list, category) {
 						let torrentInfo;
 						console.log("Fetching torrent info for " + item.title);
 						torrentInfo = await getTorrentInfo(item.link);
-						console.log(interval);
 						if (torrentInfo === undefined) {
 							console.log("Error fetching torrent info for " + item.title);
 							console.log("Retrying...");
@@ -51,6 +50,7 @@ export async function jackettCache(jackettUrl, jackettApi, list, category) {
 							}
 						}
 						insertTable(category, {
+							indexer: item.indexer._,
 							title: item.title,
 							size: item.size,
 							link: item.link,

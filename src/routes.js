@@ -41,33 +41,42 @@ routes.get("/:params/manifest.json", (req, res) => {
 
 routes.get("/:params/configure", (req, res) => {
 	const paramsJson = JSON.parse(atob(req.params.params));
-	const prefill = `?jackettUrl=${encodeURI(paramsJson.jackettUrl)}&jackettApi=${paramsJson.jackettApiKey}&realDebridApi=${paramsJson.debridApiKey}&allDebridApi=${paramsJson.debridApiKey}&premiumizeDebridApi=${paramsJson.debridApiKey}&serviceProvider=${paramsJson.streamService}&maxResults=${paramsJson.maxResults}&sorting=${paramsJson.sorting}&ascOrDesc=${paramsJson.ascOrDesc}&tmdbApiKey=${paramsJson.tmdbApiKey}&locale=${paramsJson.locale}&qualityExclusion=${paramsJson.qualityExclusion}&maxSize=${paramsJson.maxSize}`;
+	const prefill = `?jackettUrl=${encodeURI(paramsJson.jackettUrl)}&jackettApi=${paramsJson.jackettApiKey}&realDebridApi=${paramsJson.debridApiKey}&allDebridApi=${paramsJson.debridApiKey}&premiumizeDebridApi=${paramsJson.debridApiKey}&serviceProvider=${paramsJson.streamService}&maxResults=${paramsJson.maxResults}&sorting=${paramsJson.sorting}&ascOrDesc=${paramsJson.ascOrDesc}&tmdbApiKey=${paramsJson.tmdbApiKey}&locale=${paramsJson.locale}&qualityExclusion=${paramsJson.qualityExclusion}&maxSize=${paramsJson.maxSize}&maxThread=${paramsJson.maxThread}`;
 	res.redirect(`${subpath}/configure${prefill}`);
 });
 
-routes.get("/getStream/:service/:apiKey/:magnet/:seasonEpisode", async (req, res) => {
+routes.get("/getStream/:params/:fileName/", async (req, res) => {
 	let media;
-	console.log(req.params.seasonEpisode);
+	const paramsJson = JSON.parse(atob(req.params.params));
+	const { service } = paramsJson;
+	const { debridApi } = paramsJson;
+	const { magnetLink } = paramsJson;
+	let season;
 	try {
-		if (req.params.service === "alldebrid") {
-			if (req.params.seasonEpisode === "undefined") {
-				media = await getMovieADLink(atob(req.params.magnet), req.params.apiKey);
+		season = paramsJson.season;
+	} catch (e) {
+		season = undefined;
+	}
+	try {
+		if (service === "alldebrid") {
+			if (season === undefined) {
+				media = await getMovieADLink(magnetLink, debridApi);
 			} else {
-				media = await getMovieADLink(atob(req.params.magnet), req.params.apiKey, req.params.seasonEpisode);
+				media = await getMovieADLink(magnetLink, debridApi, season);
 			}
 		}
-		if (req.params.service === "realdebrid") {
-			if (req.params.seasonEpisode === "undefined") {
-				media = await getMovieRDLink(atob(req.params.magnet), req.params.apiKey);
+		if (service === "realdebrid") {
+			if (season === undefined) {
+				media = await getMovieRDLink(magnetLink, debridApi);
 			} else {
-				media = await getMovieRDLink(atob(req.params.magnet), req.params.apiKey, req.params.seasonEpisode);
+				media = await getMovieRDLink(magnetLink, debridApi, season);
 			}
 		}
-		if (req.params.service === "premiumize") {
-			if (req.params.seasonEpisode === "undefined") {
-				media = await getMoviePMLink(atob(req.params.magnet), req.params.apiKey);
+		if (service === "premiumize") {
+			if (season === undefined) {
+				media = await getMoviePMLink(magnetLink, debridApi);
 			} else {
-				media = await getMoviePMLink(atob(req.params.magnet), req.params.apiKey, req.params.seasonEpisode);
+				media = await getMoviePMLink(magnetLink, debridApi, season);
 			}
 		}
 	} catch (e) {
@@ -79,13 +88,6 @@ routes.get("/getStream/:service/:apiKey/:magnet/:seasonEpisode", async (req, res
 
 routes.get("/:params/stream/:type/:id", async (req, res) => {
 	try {
-		let protocol;
-		if (req.headers.host.includes("localhost") || req.headers.host.includes("127.0.0.1")) {
-			protocol = "http";
-		} else {
-			protocol = "https";
-		}
-		const host = `${protocol}://${req.headers.host}${subpath.substring(0)}`;
 		const paramsJson = JSON.parse(atob(req.params.params));
 		const { type } = req.params;
 		const id = req.params.id.replace(".json", "").split(":");
@@ -102,6 +104,15 @@ routes.get("/:params/stream/:type/:id", async (req, res) => {
 		const { locale } = paramsJson;
 		const { qualityExclusion } = paramsJson;
 		const { maxSize } = paramsJson;
+		const { maxThread } = paramsJson;
+		const { host } = paramsJson;
+		let protocol;
+		if (host.includes("localhost") || host.includes("127.0.0.1")) {
+			protocol = "http";
+		} else {
+			protocol = "https";
+		}
+		const hostlink = `${protocol}://${host}${subpath.substring(0)}`;
 		let sort;
 		if (sorting === "sizedesc" || sorting === "sizeasc") {
 			sort = {
@@ -141,9 +152,10 @@ routes.get("/:params/stream/:type/:id", async (req, res) => {
 					locale: locale,
 					type: type,
 				},
-				host,
+				hostlink,
 				qualityExclusion,
 				maxSize,
+				maxThread,
 			);
 			respond(res, { streams: torrentInfo });
 		}
@@ -166,9 +178,10 @@ routes.get("/:params/stream/:type/:id", async (req, res) => {
 					season: getNum(id[1]),
 					episode: getNum(id[2]),
 				},
-				host,
+				hostlink,
 				qualityExclusion,
 				maxSize,
+				maxThread,
 			);
 			respond(res, { streams: torrentInfo });
 		}
